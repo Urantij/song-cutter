@@ -35,7 +35,7 @@ pub fn spawn_strochkas_files(
 }
 
 pub fn select_strochkas(content: &str) -> Result<Vec<&str>, Box<dyn Error>> {
-    let options: Vec<&str> = content.split("\n").collect();
+    let options: Vec<&str> = content.lines().collect();
 
     for (index, item) in options.iter().enumerate() {
         println!("[{}] {}", index + 1, item);
