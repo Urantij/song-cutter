@@ -12,6 +12,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         return Err("первый аргумент".into());
     }
 
+    let lower_case = std::env::var("LOWERCASE").is_ok();
+
     let file_path = args.first().unwrap();
     let file_path = Path::new(file_path);
 
@@ -34,7 +36,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
     fs::create_dir(&temp_dir_path)?;
 
-    spawn_strochkas_files(&temp_dir_path, &file_content, &mut selected)?;
+    spawn_strochkas_files(&temp_dir_path, &file_content, &mut selected, lower_case)?;
 
     {
         let temp_file_path = file_path.with_file_name(format!("{}_temp", file_name));

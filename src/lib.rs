@@ -17,15 +17,16 @@ pub fn spawn_strochkas_files(
     dir_path: &PathBuf,
     file_content: &str,
     strochkas: &mut Vec<&str>,
+    lower_case: bool,
 ) -> Result<(), Box<dyn Error>> {
     let first = strochkas.pop().unwrap();
-    let first_file_name = format_strochka_to_file_name(first);
+    let first_file_name = format_strochka_to_file_name(first, lower_case);
     let first_file_path = dir_path.join(first_file_name);
 
     fs::write(&first_file_path, &file_content)?;
 
     while let Some(strochka) = strochkas.pop() {
-        let strochka_file_name = format_strochka_to_file_name(strochka);
+        let strochka_file_name = format_strochka_to_file_name(strochka, lower_case);
         let strochka_file_path = dir_path.join(strochka_file_name);
 
         fs::hard_link(&first_file_path, strochka_file_path)?;
@@ -66,7 +67,10 @@ pub fn select_strochkas(content: &str) -> Result<Vec<&str>, Box<dyn Error>> {
     Ok(selected)
 }
 
-pub fn format_strochka_to_file_name(strochka: &str) -> String {
+pub fn format_strochka_to_file_name(strochka: &str, lower_case: bool) -> String {
     // к сож dmenu с -i аргументом не работает с кириллицей. увы.
-    strochka.to_lowercase()
+    match lower_case {
+        true => strochka.to_lowercase(),
+        false => strochka.to_owned(),
+    }
 }
